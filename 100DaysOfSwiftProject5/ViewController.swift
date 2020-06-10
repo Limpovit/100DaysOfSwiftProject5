@@ -19,6 +19,7 @@ class ViewController: UITableViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptForAnswer))
         
+        
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: ".txt") {
             if let startWords = try? String(contentsOf: startWordsURL) {
                 allWords = startWords.components(separatedBy: "\n")
@@ -53,11 +54,9 @@ class ViewController: UITableViewController {
     func submit(_ answer: String) {
         let lowerAnswer = answer.lowercased()
         
-        let errorTitle: String
-        let errorMassege: String
-        
         if  lowerAnswer == title {
-            return 
+            showErrorMessage(title: "Word the same", massage: "You can`t just use same word!")
+            return
         }
         
         if isPossible(word: lowerAnswer) {
@@ -70,21 +69,19 @@ class ViewController: UITableViewController {
                     
                     return
                 } else {
-                     errorTitle = "Word not recognized"
-                     errorMassege = "You can`t just make them up, you know!"
+                    showErrorMessage(title: "Word not recognized", massage: "You can`t just make them up, you know!")
                 }
             } else {
-                 errorTitle = "Word already used"
-                 errorMassege = "Be more original!"
+                showErrorMessage(title: "Word already used", massage: "Be more original!")
             }
         } else {
             guard  let title = title else { return }
-             errorTitle = "Word not possible"
-            errorMassege = "You can`t spell that word from \(title.lowercased())."
+            showErrorMessage(title: "Word not possible", massage: "You can`t spell that word from \(title.lowercased()).")
         }
-        
-        
-        let ac = UIAlertController(title: errorTitle, message: errorMassege, preferredStyle: .alert)
+    }
+    
+    func showErrorMessage(title: String, massage: String) {
+        let ac = UIAlertController(title: title, message: massage, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
     }
