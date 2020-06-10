@@ -56,6 +56,10 @@ class ViewController: UITableViewController {
         let errorTitle: String
         let errorMassege: String
         
+        if  lowerAnswer == title {
+            return 
+        }
+        
         if isPossible(word: lowerAnswer) {
             if isOriginal(word: lowerAnswer) {
                 if isReal(word: lowerAnswer) {
@@ -78,6 +82,7 @@ class ViewController: UITableViewController {
              errorTitle = "Word not possible"
             errorMassege = "You can`t spell that word from \(title.lowercased())."
         }
+        
         
         let ac = UIAlertController(title: errorTitle, message: errorMassege, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
@@ -102,6 +107,11 @@ class ViewController: UITableViewController {
     }
     
     func isReal(word: String) -> Bool {
+        
+        if word.count < 3 {
+            return false
+        }
+        
         let checker = UITextChecker()
         let range = NSRange(location: 0, length: word.utf16.count)
         let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
